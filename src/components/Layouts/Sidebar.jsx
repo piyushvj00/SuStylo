@@ -36,12 +36,10 @@ const Sidebar = ({ isCollapsed }) => {
   };
 
   const menuItems = [
-    { name: "Dashboard", Icon: Home, path: "/dashboard" },
- 
-    { name: "Users", Icon: Users, path: "/users" },
+    { name: "Dashboard", Icon: Home, path: "/dashboard" }, 
+    { name: "Customer", Icon: Users, path: "/users" },
     { name: "Coupons", Icon: ShoppingCart, path: "/coupons" },
     { name: "Referral", Icon: Award, path: "/referral" },
-
     { name: "Contact", Icon: Phone, path: "/contact" },
     { name: "Blog", Icon: FileText, path: "/blog" },
     // { name: "Businesses", Icon: Building, path: "/businesses" },

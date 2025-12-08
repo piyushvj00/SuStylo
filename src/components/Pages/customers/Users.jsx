@@ -7,7 +7,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import axiosInstance from "../../../config/AxiosInstance"; // Adjust the path
+import axiosInstance from "../../../config/AxiosInstance";
 import { ToastContainer, toast } from "react-toastify";
 import { saveAs } from "file-saver";
 import UserDetailsModal from "./Userdetails";
@@ -31,12 +31,13 @@ export default function Users() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get('/users/all');
+      const response = await axiosInstance.get('/customers/get-all');
+      console.log("Fetched users:", response.data);
       if (response.data.success) {
-        setUsers(response.data.users);
-        setTotalUsers(response.data.users.length);
+        setUsers(response.data.customers);
+        setTotalUsers(response.data.customers.length);
         // Calculate total pages based on the total users and limit
-        setTotalPages(Math.ceil(response.data.users.length / limit));
+        setTotalPages(Math.ceil(response.data.customers.length / limit));
       }
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -187,12 +188,8 @@ export default function Users() {
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Email
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Role
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Joining Date
-                      </th>
+                      
+                      
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                       </th>
@@ -212,28 +209,16 @@ export default function Users() {
                             {(currentPage - 1) * limit + index + 1}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {user.firstName} {user.lastName}
+                            {user.name}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {user.mobile || "-"}
+                            {user.phone || "-"}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
                             {user.email}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                              user.role === 'admin'
-                                ? 'bg-purple-100 text-purple-800'
-                                : user.role === 'vendor'
-                                ? 'bg-orange-100 text-orange-800'
-                                : 'bg-blue-100 text-blue-800'
-                            }`}>
-                              {user.role}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {user.createdAt ? formatDate(user.createdAt) : "-"}
-                          </td>
+                          
+                         
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             <div className="flex items-center gap-2">
                               <button

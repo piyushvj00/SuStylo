@@ -15,9 +15,9 @@ const UserDetailsModal = ({ userId, onClose }) => {
   const fetchUserDetails = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get(`/users/${userId}`);
+      const response = await axiosInstance.get(`/customers/${userId}`);
       if (response.data.success) {
-        setUser(response.data.user);
+        setUser(response.data.customer);
       }
     } catch (error) {
       console.error('Error fetching user details:', error);
@@ -25,7 +25,6 @@ const UserDetailsModal = ({ userId, onClose }) => {
       setLoading(false);
     }
   };
-
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-IN', {
       year: 'numeric',
@@ -76,7 +75,7 @@ const UserDetailsModal = ({ userId, onClose }) => {
                     <User className="h-4 w-4 text-gray-500" />
                     <h3 className="font-medium text-gray-700">Name</h3>
                   </div>
-                  <p className="text-gray-900">{user.firstName} {user.lastName}</p>
+                  <p className="text-gray-900">{user.name}</p>
                 </div>
 
                 <div className="bg-gray-50 p-4 rounded-lg">
@@ -95,7 +94,7 @@ const UserDetailsModal = ({ userId, onClose }) => {
                     <Phone className="h-4 w-4 text-gray-500" />
                     <h3 className="font-medium text-gray-700">Phone</h3>
                   </div>
-                  <p className="text-gray-900">{user.mobile}</p>
+                  <p className="text-gray-900">{user.phone}</p>
                   <span className={`text-xs px-2 py-1 rounded-full ${user.mobileVerified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                     {user.mobileVerified ? 'Verified' : 'Not Verified'}
                   </span>
@@ -104,12 +103,10 @@ const UserDetailsModal = ({ userId, onClose }) => {
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <div className="flex items-center space-x-2 mb-2">
                     <Shield className="h-4 w-4 text-gray-500" />
-                    <h3 className="font-medium text-gray-700">Role & Status</h3>
+                    <h3 className="font-medium text-gray-700">Status</h3>
                   </div>
                   <div className="flex space-x-2">
-                    <span className={`text-xs px-2 py-1 rounded-full ${getRoleColor(user.role)}`}>
-                      {user.role}
-                    </span>
+                    
                     <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(user.status)}`}>
                       {user.status}
                     </span>
