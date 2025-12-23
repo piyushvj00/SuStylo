@@ -28,9 +28,21 @@ import EditReview from './components/Pages/Reviews/EditReview';
 
 
 
-
-
 import ReferralMain from './components/Pages/Referral/ReferralMain';
+
+
+// Bussiness(Salon and Freelancers)
+import SalonsList from './components/Pages/Businesses/SalonsList';
+import SalonDetails from './components/Pages/Businesses/SalonDetails';
+import EditSalon from './components/Pages/Businesses/EditSalon';
+import FreelancersList from './components/Pages/Businesses/FreelancersList';
+import FreelancerDetails from './components/Pages/Businesses/FreelancerDetails';
+import EditFreelancer from './components/Pages/Businesses/EditFreelancer';
+
+// Banners
+import BannersList from './components/Pages/Banners/BannersList';
+import CreateBanner from './components/Pages/Banners/CreateBanner';
+import EditBanner from './components/Pages/Banners/EditBanner';
 
 
 
@@ -93,17 +105,27 @@ function App() {
         <Route path="/reviews/edit/:id" element={<EditReview />} />
 
 
-    
-
-
-
-      
 
 
         <Route path="/coupons" element={<Coupon />} />
 
 
         <Route path="/referral/*" element={<ReferralMain />} />
+
+
+
+        {/* Business Routes (Salon and Freelancers) */}
+        <Route path="/businesses/salons" element={<SalonsList />} />
+        <Route path="/businesses/salons/:id" element={<SalonDetails />} />
+        <Route path="/businesses/salons/edit/:id" element={<EditSalon />} />
+        <Route path="/businesses/freelancers" element={<FreelancersList />} />
+        <Route path="/businesses/freelancers/:id" element={<FreelancerDetails />} />
+        <Route path="/businesses/freelancers/edit/:id" element={<EditFreelancer />} />
+
+        {/* Banners */}
+        <Route path="/banners" element={<BannersList />} />
+        <Route path="/banners/create" element={<CreateBanner />} />
+        <Route path="/banners/edit/:id" element={<EditBanner />} />
 
       </Route>
     </Routes>

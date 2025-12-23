@@ -144,7 +144,8 @@ const BlogDetails = () => {
         if (imagePath.startsWith('http')) return imagePath;
         
         // Try different possible paths
-        const baseUrl = 'http://localhost:5000';
+        // const baseUrl = 'http://localhost:5000';
+        const baseUrl = 'https://api.sustylo.com';
         return `${baseUrl}/${imagePath}`;
     };
 

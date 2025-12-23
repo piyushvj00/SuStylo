@@ -72,7 +72,8 @@ const BlogsList = () => {
     if (imagePath.startsWith('http')) return imagePath;
     
     // Check if the image exists by trying multiple paths
-    const baseUrl = 'http://localhost:5000';
+    // const baseUrl = 'http://localhost:5000';
+    const baseUrl = 'https://api.sustylo.com';
     const possiblePaths = [
       `${baseUrl}/${imagePath}`,
       `${baseUrl}/uploads/${imagePath}`,
