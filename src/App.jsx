@@ -29,6 +29,10 @@ import EditReview from './components/Pages/Reviews/EditReview';
 
 
 import ReferralMain from './components/Pages/Referral/ReferralMain';
+import Attendence from './components/Pages/staff/Attendence';
+import StaffAppointmentsModal from './components/Pages/staff/StaffAppointmentsModal';
+import Leads from './components/Pages/Leads/Leads';
+import Salons from './components/Pages/Salons/SalonList';
 
 
 // Bussiness(Salon and Freelancers)
@@ -97,8 +101,6 @@ function App() {
         <Route path="/blog/edit/:id" element={<CreateBlog />} />
         {/* <Route path="/blog/:id/comments" element={<BlogComments />} /> */}
         <Route path="/blog/comments/:blogId" element={<BlogComments />} />
-
-
         <Route path="/reviews" element={<ReviewsList />} />
         <Route path="/reviews/top-businesses" element={<TopBusinesses />} />
         <Route path="/reviews/business/:id" element={<BusinessReviews />} />
@@ -127,6 +129,12 @@ function App() {
         <Route path="/banners/create" element={<CreateBanner />} />
         <Route path="/banners/edit/:id" element={<EditBanner />} />
 
+        <Route path="/appointments" element={<StaffAppointmentsModal />} />
+        <Route path="/attendence" element={<Attendence />} />
+        <Route path="/coupons" element={<Coupon />} />
+        {/* <Route path="/referral" element={<ReferralMain />} /> */}
+        <Route path="/leads" element={<Leads />} />
+        <Route path="/salons" element={<Salons />} />
       </Route>
     </Routes>
   );
