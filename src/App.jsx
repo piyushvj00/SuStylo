@@ -32,7 +32,6 @@ import ReferralMain from './components/Pages/Referral/ReferralMain';
 import Attendence from './components/Pages/staff/Attendence';
 import StaffAppointmentsModal from './components/Pages/staff/StaffAppointmentsModal';
 import Leads from './components/Pages/Leads/Leads';
-import Salons from './components/Pages/Salons/SalonList';
 
 
 // Bussiness(Salon and Freelancers)
@@ -134,7 +133,6 @@ function App() {
         <Route path="/coupons" element={<Coupon />} />
         {/* <Route path="/referral" element={<ReferralMain />} /> */}
         <Route path="/leads" element={<Leads />} />
-        <Route path="/salons" element={<Salons />} />
       </Route>
     </Routes>
   );

@@ -195,12 +195,11 @@ const Sidebar = ({ isCollapsed }) => {
     { name: "Banners", Icon: ImageIcon, path: "/banners" },
     { name: "Reviews", Icon: Star, path: "/reviews" },
     // { name: "Settings", Icon: Settings, path: "/setting" },
-    { name: "Settings", Icon: Settings, path: "/setting" },
     // { name: "Coupons", Icon: Settings, path: "/coupons" },
     { name: "Attendence", Icon: Settings, path: "/attendence" },
     { name: "Appointments", Icon: Settings, path: "/appointments" },
     { name: "Leads", Icon: Settings, path: "/leads" },
-    { name: "Salons", Icon: Settings, path: "/salons" },
+    // { name: "Salons", Icon: Settings, path: "/salons" },
   ];
 
   const businessSubItems = [
