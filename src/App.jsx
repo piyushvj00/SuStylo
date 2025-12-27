@@ -94,12 +94,14 @@ function App() {
         <Route path="/setting" element={<SettingsPage />} />
         <Route path="/edit-profile" element={<ProfileForm />} />
         <Route path="/contact" element={<ContactList />} />
+
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/create" element={<CreateBlog />} />
         <Route path="/blog/:id" element={<BlogDetails />} />
         <Route path="/blog/edit/:id" element={<CreateBlog />} />
         {/* <Route path="/blog/:id/comments" element={<BlogComments />} /> */}
         <Route path="/blog/comments/:blogId" element={<BlogComments />} />
+        
         <Route path="/reviews" element={<ReviewsList />} />
         <Route path="/reviews/top-businesses" element={<TopBusinesses />} />
         <Route path="/reviews/business/:id" element={<BusinessReviews />} />
