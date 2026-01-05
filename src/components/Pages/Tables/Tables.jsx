@@ -584,10 +584,10 @@ const Tables = () => {
   };
 
   // Get business name by ID
-  const getBusinessName = (businessId) => {
-    const business = businesses.find(b => b._id === businessId);
-    return business ? business.name : 'Unknown Business';
-  };
+  // const getBusinessName = (businessId) => {
+  //   const business = businesses.find(b => b._id === businessId);
+  //   return business ? business.name : 'Unknown Business';
+  // };
 
   // Get branch name by ID
   const getBranchName = (branchId) => {

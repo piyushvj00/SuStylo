@@ -54,12 +54,20 @@ const Login = ({ setUser }) => {
         toast.success(message || "Login successful!");
 
         // ✅ Role-based redirect
-        if (admin.role === "super_admin") {
-          navigate("/admin/dashboard");
-        } else if (admin.role === "admin") {
-          navigate("/admin/dashboard");
+        // if (admin.role === "super_admin") {
+        //   navigate("/admin/dashboard");
+        // } else if (admin.role === "admin") {
+        //   navigate("/admin/dashboard");
+        // } else {
+        //   navigate("/dashboard");
+        // }
+        
+         // ✅ FINAL ROLE BASED REDIRECT (FIXED)
+        if (admin.role === "staff") {
+          navigate("/attendence", { replace: true });
         } else {
-          navigate("/dashboard");
+          // super_admin, admin, freelancer
+          navigate("/dashboard", { replace: true });
         }
       } else {
         toast.error(message || "Invalid credentials. Please try again.");

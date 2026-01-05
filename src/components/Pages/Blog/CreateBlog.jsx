@@ -10,14 +10,14 @@ const CreateBlog = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [authors, setAuthors] = useState([]);
-    const [loadingAuthors, setLoadingAuthors] = useState(false);
+    // const [loadingAuthors, setLoadingAuthors] = useState(false);
     const [authorError, setAuthorError] = useState('');
-    const [showAuthorDropdown, setShowAuthorDropdown] = useState(false);
+    // const [showAuthorDropdown, setShowAuthorDropdown] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         slug: '',
         author: '',
-        authorName: '',
+        // authorName: '',
         tags: '',
         category: '',
         metaTitle: '',
@@ -35,24 +35,24 @@ const CreateBlog = () => {
 
     const fetchAuthors = async () => {
         try {
-            setLoadingAuthors(true);
+            // setLoadingAuthors(true);
             setAuthorError('');
             
             // Try different endpoints in case the path is different
             let response;
             try {
                 response = await axiosInstance.get('/admins/alladmins');
-            } catch (firstError) {
+            } catch {
                 console.log('Trying alternative endpoint...');
                 try {
                     // Try alternative endpoint
                     response = await axiosInstance.get('/admins');
-                } catch (secondError) {
+                } catch {
                     console.log('Trying /users endpoint...');
                     try {
                         // Try users endpoint
                         response = await axiosInstance.get('/users/admins');
-                    } catch (thirdError) {
+                    } catch {
                         throw new Error('Could not fetch authors from any endpoint');
                     }
                 }
@@ -107,7 +107,7 @@ const CreateBlog = () => {
                 status: 'active'
             }]);
         } finally {
-            setLoadingAuthors(false);
+            // setLoadingAuthors(false);
         }
     };
 
@@ -141,31 +141,31 @@ const CreateBlog = () => {
         }));
     };
 
-    const selectAuthor = (author) => {
-        setFormData(prev => ({
-            ...prev,
-            author: author._id,
-            authorName: author.name
-        }));
-        setShowAuthorDropdown(false);
-    };
+    // const selectAuthor = (author) => {
+    //     setFormData(prev => ({
+    //         ...prev,
+    //         author: author._id,
+    //         authorName: author.name
+    //     }));
+    //     setShowAuthorDropdown(false);
+    // };
 
     // Manual author input as fallback
-    const handleManualAuthorInput = (e) => {
-        const { value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            author: value,
-            authorName: value ? `Manual ID: ${value}` : ''
-        }));
-    };
+    // const handleManualAuthorInput = (e) => {
+    //     const { value } = e.target;
+    //     setFormData(prev => ({
+    //         ...prev,
+    //         author: value,
+    //         authorName: value ? `Manual ID: ${value}` : ''
+    //     }));
+    // };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         // Validate required fields
-        if (!formData.title || !formData.slug || !formData.author || !formData.contentHtml || formData.contentHtml === '<p></p>') {
+        if (!formData.title || !formData.slug || !formData.contentHtml || formData.contentHtml === '<p></p>') {
             toast.error('Please fill all required fields and add some content');
             setLoading(false);
             return;
@@ -314,105 +314,7 @@ const CreateBlog = () => {
                             </p>
                         </div>
 
-                        {/* Author Selection */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Author *
-                            </label>
-                            
-                            {/* Author Dropdown */}
-                            <div className="relative mb-3">
-                                <button
-                                    type="button"
-                                    onClick={() => setShowAuthorDropdown(!showAuthorDropdown)}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
-                                    disabled={loadingAuthors}
-                                >
-                                    <div className="flex items-center gap-2">
-                                        {formData.authorName ? (
-                                            <>
-                                                <User className="h-4 w-4 text-gray-500" />
-                                                <span className="text-gray-700">{formData.authorName}</span>
-                                            </>
-                                        ) : (
-                                            <span className="text-gray-500">
-                                                {loadingAuthors ? 'Loading authors...' : 'Select an author'}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${showAuthorDropdown ? 'rotate-180' : ''}`} />
-                                </button>
-                                
-                                {/* Dropdown Menu */}
-                                {showAuthorDropdown && (
-                                    <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                                        {loadingAuthors ? (
-                                            <div className="p-3 text-center">
-                                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-600 mx-auto"></div>
-                                                <p className="text-sm text-gray-500 mt-2">Loading authors...</p>
-                                            </div>
-                                        ) : authorError ? (
-                                            <div className="p-3 text-center">
-                                                <AlertCircle className="h-5 w-5 text-red-500 mx-auto mb-2" />
-                                                <p className="text-sm text-red-500">{authorError}</p>
-                                            </div>
-                                        ) : authors.length === 0 ? (
-                                            <div className="p-3 text-center text-gray-500">
-                                                No authors available
-                                            </div>
-                                        ) : (
-                                            <div className="py-1">
-                                                {authors.map((author) => (
-                                                    <button
-                                                        key={author._id}
-                                                        type="button"
-                                                        onClick={() => selectAuthor(author)}
-                                                        className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center gap-3 ${
-                                                            formData.author === author._id ? 'bg-green-50 text-green-700' : 'text-gray-700'
-                                                        }`}
-                                                    >
-                                                        <div className="flex-1">
-                                                            <div className="font-medium">{author.name}</div>
-                                                            <div className="text-xs text-gray-500 mt-1 flex items-center gap-2">
-                                                                <span>{author.email}</span>
-                                                                <span className={`px-2 py-0.5 text-xs rounded-full ${
-                                                                    author.role === 'super_admin' 
-                                                                        ? 'bg-blue-100 text-blue-800' 
-                                                                        : 'bg-gray-100 text-gray-800'
-                                                                }`}>
-                                                                    {author.role === 'super_admin' ? 'Super Admin' : 'Admin'}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        {formData.author === author._id && (
-                                                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                                        )}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Manual Author Input as Fallback */}
-                            <div className="mt-2">
-                                <label className="block text-xs font-medium text-gray-500 mb-1">
-                                    Or enter author ID manually:
-                                </label>
-                                <input
-                                    type="text"
-                                    value={formData.author}
-                                    onChange={handleManualAuthorInput}
-                                    className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                                    placeholder="Enter author ID (e.g., 68c5131f14e7e90bc6ce3fda)"
-                                />
-                            </div>
-                            
-                            <p className="text-xs text-gray-500 mt-1">
-                                Select the author who wrote this blog post or enter the author ID manually
-                            </p>
-                        </div>
+                      
 
                         {/* Tags */}
                         <div>
