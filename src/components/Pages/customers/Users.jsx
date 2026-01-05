@@ -9,7 +9,7 @@ import {
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../config/AxiosInstance";
 import { ToastContainer, toast } from "react-toastify";
-import { saveAs } from "file-saver";
+// import { saveAs } from "file-saver";
 import UserDetailsModal from "./Userdetails";
 
 export default function Users() {
@@ -17,7 +17,7 @@ export default function Users() {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [totalUsers, setTotalUsers] = useState(0);
+  // const [totalUsers, setTotalUsers] = useState(0);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [userDetailsModal, setUserDetailsModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ export default function Users() {
       console.log("Fetched users:", response.data);
       if (response.data.success) {
         setUsers(response.data.customers);
-        setTotalUsers(response.data.customers.length);
+        // setTotalUsers(response.data.customers.length);
         // Calculate total pages based on the total users and limit
         setTotalPages(Math.ceil(response.data.customers.length / limit));
       }
@@ -83,28 +83,28 @@ export default function Users() {
     setUserDetailsModal(true);
   };
 
-  const handleViewBookings = (userId) => {
-    // Just show a message for now since we're only adding the button
-    toast.info(`View bookings for user ID: ${userId}`);
-    // You can implement the actual booking view functionality later
-  };
+  // const handleViewBookings = (userId) => {
+  //   // Just show a message for now since we're only adding the button
+  //   toast.info(`View bookings for user ID: ${userId}`);
+  //   // You can implement the actual booking view functionality later
+  // };
 
-  const handleExport = async () => {
-    try {
-      const response = await axiosInstance.get('/users/export', {
-        responseType: "blob",
-      });
+  // const handleExport = async () => {
+  //   try {
+  //     const response = await axiosInstance.get('/users/export', {
+  //       responseType: "blob",
+  //     });
 
-      const blob = new Blob([response.data], {
-        type: "text/csv;charset=utf-8",
-      });
-      const timestamp = Date.now();
-      saveAs(blob, `users_${timestamp}.csv`);
-    } catch (error) {
-      console.error("Export failed:", error);
-      toast.error("Export failed");
-    }
-  };
+  //     const blob = new Blob([response.data], {
+  //       type: "text/csv;charset=utf-8",
+  //     });
+  //     const timestamp = Date.now();
+  //     saveAs(blob, `users_${timestamp}.csv`);
+  //   } catch (error) {
+  //     console.error("Export failed:", error);
+  //     toast.error("Export failed");
+  //   }
+  // };
 
   const filteredUsers = users.filter(user => {
     const searchTerm = search.toLowerCase();
@@ -122,13 +122,13 @@ export default function Users() {
     currentPage * limit
   );
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-IN', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
+  // const formatDate = (dateString) => {
+  //   return new Date(dateString).toLocaleDateString('en-IN', {
+  //     year: 'numeric',
+  //     month: 'short',
+  //     day: 'numeric'
+  //   });
+  // };
 
   return (
     <>

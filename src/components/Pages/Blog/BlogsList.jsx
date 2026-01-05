@@ -321,7 +321,7 @@
 
 
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../config/AxiosInstance';
 import { ToastContainer, toast } from 'react-toastify';
 import { Edit, Trash2, Eye, MessageCircle, Plus, Calendar, User } from 'lucide-react';
@@ -336,28 +336,36 @@ const BlogsList = () => {
   const [totalItems, setTotalItems] = useState(0);
   const limit = 9;
 
-  useEffect(() => {
-    fetchBlogs();
-  }, [currentPage]);
 
-  const fetchBlogs = async () => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.get(`/blogs/list?page=${currentPage}&limit=${limit}`);
-      if (response.data.success) {
-        setBlogs(response.data.data);
-        setTotalPages(response.data.pagination?.totalPages || 1);
-        setTotalItems(response.data.pagination?.totalItems || 0);
-      } else {
-        throw new Error('Failed to fetch blogs');
-      }
-    } catch (error) {
-      console.error('Error fetching blogs:', error);
-      toast.error('Failed to load blogs');
-    } finally {
-      setLoading(false);
+
+ const fetchBlogs = useCallback(async () => {
+  try {
+    setLoading(true);
+
+    const response = await axiosInstance.get(
+      `/blogs/list?page=${currentPage}&limit=${limit}`
+    );
+
+    if (response.data.success) {
+      setBlogs(response.data.data);
+      setTotalPages(response.data.pagination?.totalPages || 1);
+      setTotalItems(response.data.pagination?.totalItems || 0);
+    } else {
+      throw new Error('Failed to fetch blogs');
     }
-  };
+  } catch (error) {
+    console.error('Error fetching blogs:', error);
+    toast.error('Failed to load blogs');
+  } finally {
+    setLoading(false);
+  }
+}, [currentPage, limit]);
+
+useEffect(() => {
+  fetchBlogs();
+}, [fetchBlogs]);
+
+
 
   const deleteBlog = async (blogId, blogTitle) => {
     const result = await Swal.fire({
@@ -395,7 +403,8 @@ const BlogsList = () => {
     if (imagePath.startsWith('http')) return imagePath;
 
     // For Cloudinary URLs or local uploads
-    const baseUrl = process.env.REACT_APP_API_URL || 'https://api.sustylo.com';
+    // const baseUrl = process.env.REACT_APP_API_URL || 'https://api.sustylo.com';
+    const baseUrl =  'https://api.sustylo.com';
 
     // If it's a relative path, prepend base URL
     if (imagePath.startsWith('/')) {

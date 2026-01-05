@@ -10,9 +10,9 @@ const CreateBlog = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [authors, setAuthors] = useState([]);
-    const [loadingAuthors, setLoadingAuthors] = useState(false);
+    // const [loadingAuthors, setLoadingAuthors] = useState(false);
     const [authorError, setAuthorError] = useState('');
-    const [showAuthorDropdown, setShowAuthorDropdown] = useState(false);
+    // const [showAuthorDropdown, setShowAuthorDropdown] = useState(false);
     const [formData, setFormData] = useState({
         title: '',
         slug: '',
@@ -35,24 +35,24 @@ const CreateBlog = () => {
 
     const fetchAuthors = async () => {
         try {
-            setLoadingAuthors(true);
+            // setLoadingAuthors(true);
             setAuthorError('');
             
             // Try different endpoints in case the path is different
             let response;
             try {
                 response = await axiosInstance.get('/admins/alladmins');
-            } catch (firstError) {
+            } catch {
                 console.log('Trying alternative endpoint...');
                 try {
                     // Try alternative endpoint
                     response = await axiosInstance.get('/admins');
-                } catch (secondError) {
+                } catch {
                     console.log('Trying /users endpoint...');
                     try {
                         // Try users endpoint
                         response = await axiosInstance.get('/users/admins');
-                    } catch (thirdError) {
+                    } catch {
                         throw new Error('Could not fetch authors from any endpoint');
                     }
                 }
@@ -107,7 +107,7 @@ const CreateBlog = () => {
                 status: 'active'
             }]);
         } finally {
-            setLoadingAuthors(false);
+            // setLoadingAuthors(false);
         }
     };
 

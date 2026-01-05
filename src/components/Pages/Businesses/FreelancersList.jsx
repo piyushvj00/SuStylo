@@ -355,7 +355,7 @@ const FreelancersList = () => {
                               key={index}
                               className="inline-flex items-center px-2 py-1 rounded-md text-xs bg-teal-50 text-teal-700"
                             >
-                              {facility.replace(/[\[\]"]/g, '')}
+                              {facility.replace(/[\]"]/g, '')}
                             </span>
                           ))}
                           {freelancer.facilities.length > 3 && (

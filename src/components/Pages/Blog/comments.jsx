@@ -717,7 +717,7 @@ const AllComments = () => {
         month: 'short',
         day: 'numeric'
       });
-    } catch (error) {
+    } catch {
       return 'Invalid date';
     }
   };

@@ -639,7 +639,7 @@
 
 
 // components/Pages/Businesses/SalonDetails.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../../../config/AxiosInstance';
 import {
@@ -737,25 +737,30 @@ const SalonDetails = () => {
     avatar: null
   });
 
-  useEffect(() => {
-    fetchSalonDetails();
-  }, [id]);
 
-  const fetchSalonDetails = async () => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.get(`/salons/${id}`);
-      if (response.data.success) {
-        setSalon(response.data.salon);
-      }
-    } catch (error) {
-      console.error('Error fetching salon details:', error);
-      toast.error('Failed to fetch salon details');
-      navigate('/businesses/salons');
-    } finally {
-      setLoading(false);
+
+const fetchSalonDetails = useCallback(async () => {
+  try {
+    setLoading(true);
+    const response = await axiosInstance.get(`/salons/${id}`);
+    if (response.data.success) {
+      setSalon(response.data.salon);
     }
-  };
+  } catch (error) {
+    console.error('Error fetching salon details:', error);
+    toast.error('Failed to fetch salon details');
+    navigate('/businesses/salons');
+  } finally {
+    setLoading(false);
+  }
+}, [id, navigate]);
+
+
+useEffect(() => {
+  fetchSalonDetails();
+}, [fetchSalonDetails]);
+
+
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-IN', {
@@ -997,7 +1002,7 @@ const SalonDetails = () => {
             // String se array convert karein
             const expertiseArray = JSON.parse(staffForm[key]);
             formData.append(key, JSON.stringify(expertiseArray));
-          } catch (error) {
+          } catch {
             // Agar JSON parse nahi ho paaye to as it is send karein
             formData.append(key, staffForm[key]);
           }
@@ -1033,7 +1038,7 @@ const SalonDetails = () => {
               try {
                 const expertiseArray = JSON.parse(staffForm[key]);
                 updateFormData.append(key, JSON.stringify(expertiseArray));
-              } catch (error) {
+              } catch  {
                 updateFormData.append(key, staffForm[key]);
               }
             } else if (Array.isArray(staffForm[key])) {

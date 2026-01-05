@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../config/AxiosInstance';
 import { Loader, Calendar, Clock, User, CheckCircle, Clock as ClockIcon, XCircle, AlertCircle, Search, RefreshCw } from 'lucide-react';
 import { toast, ToastContainer } from 'react-toastify';
@@ -32,20 +32,11 @@ const StaffAppointmentsHistory = () => {
     }
   }, []);
 
-  // Fetch appointments when staffId is available
-  useEffect(() => {
-    if (staffId) {
-      fetchStaffAppointments();
-    }
-  }, [staffId]);
 
-  useEffect(() => {
-    applyFilters();
-  }, [searchTerm, statusFilter, appointments]);
-
-  const fetchStaffAppointments = async () => {
+  // Fetch appointments
+  const fetchStaffAppointments = useCallback(async () => {
     if (!staffId) {
-      toast.error('Unable to identify staff member', {
+      toast.error("Unable to identify staff member", {
         position: "top-right",
         autoClose: 3000,
       });
@@ -55,17 +46,18 @@ const StaffAppointmentsHistory = () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get(`/appointment/staff/${staffId}`);
-      
+
       if (response.data.success) {
         setAppointments(response.data.appointments || []);
-        toast.success('Appointments history loaded!', {
+        toast.success("Appointments history loaded!", {
           position: "top-right",
           autoClose: 3000,
         });
       }
     } catch (err) {
-      console.error('Error fetching appointments:', err);
-      const errorMessage = err.response?.data?.message || 'Failed to load appointments history.';
+      console.error("Error fetching appointments:", err);
+      const errorMessage =
+        err.response?.data?.message || "Failed to load appointments history.";
       toast.error(errorMessage, {
         position: "top-right",
         autoClose: 5000,
@@ -74,29 +66,46 @@ const StaffAppointmentsHistory = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [staffId]);
 
-  const applyFilters = () => {
+  // Apply filters
+  const applyFilters = useCallback(() => {
     let filtered = [...appointments];
 
-    // Apply status filter
+    // Status filter
     if (statusFilter) {
-      filtered = filtered.filter(appointment => appointment.status === statusFilter);
+      filtered = filtered.filter(
+        (appointment) => appointment.status === statusFilter
+      );
     }
 
-    // Apply search filter
+    // Search filter
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(appointment =>
-        appointment.bookingId?.toLowerCase().includes(term) ||
-        appointment.userId?.toLowerCase().includes(term) ||
-        appointment.notes?.toLowerCase().includes(term) ||
-        appointment.schedule?.slot?.toLowerCase().includes(term)
+      filtered = filtered.filter(
+        (appointment) =>
+          appointment.bookingId?.toLowerCase().includes(term) ||
+          appointment.userId?.toLowerCase().includes(term) ||
+          appointment.notes?.toLowerCase().includes(term) ||
+          appointment.schedule?.slot?.toLowerCase().includes(term)
       );
     }
 
     setFilteredAppointments(filtered);
-  };
+  }, [appointments, statusFilter, searchTerm]);
+
+  // Fetch when staffId changes
+  useEffect(() => {
+    if (staffId) {
+      fetchStaffAppointments();
+    }
+  }, [staffId, fetchStaffAppointments]);
+
+  // Apply filters when dependencies change
+  useEffect(() => {
+    applyFilters();
+  }, [applyFilters]);
+
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-IN', {
@@ -291,11 +300,11 @@ const StaffAppointmentsHistory = () => {
               <Calendar className="h-16 w-16 text-gray-300 mx-auto mb-3" />
               <h3 className="text-lg font-medium text-gray-700 mb-2">No Appointments Found</h3>
               <p className="text-gray-500">
-                {searchTerm || statusFilter 
-                  ? 'No appointments match your filters' 
+                {searchTerm || statusFilter
+                  ? 'No appointments match your filters'
                   : appointments.length === 0
-                  ? 'No appointments found for your account'
-                  : 'Try clearing your filters to see all appointments'}
+                    ? 'No appointments found for your account'
+                    : 'Try clearing your filters to see all appointments'}
               </p>
             </div>
           ) : (
@@ -327,7 +336,7 @@ const StaffAppointmentsHistory = () => {
                   <tr key={appointment._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {appointment.bookingId 
+                        {appointment.bookingId
                           ? `#${appointment.bookingId.slice(-8)}`
                           : `#${appointment._id?.slice(-8) || 'N/A'}`
                         }

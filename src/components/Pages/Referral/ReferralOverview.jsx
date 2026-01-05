@@ -1,5 +1,5 @@
 // components/Pages/Referral/ReferralOverview.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../config/AxiosInstance';
 import { Users, TrendingUp, Award, CreditCard, Loader, Calendar } from 'lucide-react';
 
@@ -15,47 +15,51 @@ const ReferralOverview = () => {
     const [loading, setLoading] = useState(true);
     const [chartData, setChartData] = useState([]);
 
-    useEffect(() => {
-        fetchOverviewData();
-    }, []);
+ 
 
-    const fetchOverviewData = async () => {
-        try {
-            setLoading(true);
+ const fetchOverviewData = useCallback(async () => {
+    try {
+        setLoading(true);
 
-            // Fetch referrals
-            const referralsResponse = await axiosInstance.get('/users/admin/referrals');
-            const rewardResponse = await axiosInstance.get('/users/admin/get-reward');
+        // Fetch referrals
+        const referralsResponse = await axiosInstance.get('/users/admin/referrals');
+        const rewardResponse = await axiosInstance.get('/users/admin/get-reward');
 
-            if (referralsResponse.data.success) {
-                const referrals = referralsResponse.data.referrals;
-                const total = referrals.length;
-                const completed = referrals.filter(ref => ref.bookingCompleted && ref.rewardCredited).length;
-                const pending = referrals.filter(ref => !ref.bookingCompleted || !ref.rewardCredited).length;
-                const totalRewards = referrals
-                    .filter(ref => ref.rewardCredited)
-                    .reduce((sum, ref) => sum + ref.rewardAmount, 0);
+        if (referralsResponse.data.success) {
+            const referrals = referralsResponse.data.referrals;
+            const total = referrals.length;
+            const completed = referrals.filter(ref => ref.bookingCompleted && ref.rewardCredited).length;
+            const pending = referrals.filter(ref => !ref.bookingCompleted || !ref.rewardCredited).length;
+            const totalRewards = referrals
+                .filter(ref => ref.rewardCredited)
+                .reduce((sum, ref) => sum + ref.rewardAmount, 0);
 
-                setStats({
-                    totalReferrals: total,
-                    completedReferrals: completed,
-                    pendingReferrals: pending,
-                    totalRewards: totalRewards,
-                    currentReward: rewardResponse.data.reward || 0
-                });
+            setStats({
+                totalReferrals: total,
+                completedReferrals: completed,
+                pendingReferrals: pending,
+                totalRewards: totalRewards,
+                currentReward: rewardResponse.data.reward || 0
+            });
 
-                setRecentReferrals(referrals.slice(0, 5));
+            setRecentReferrals(referrals.slice(0, 5));
 
-                // Generate chart data (last 7 days)
-                generateChartData(referrals);
-            }
-        } catch (error) {
-            console.error('Error fetching overview data:', error);
-            alert('Failed to fetch referral data');
-        } finally {
-            setLoading(false);
+            // Generate chart data (last 7 days)
+            generateChartData(referrals);
         }
-    };
+    } catch (error) {
+        console.error('Error fetching overview data:', error);
+        alert('Failed to fetch referral data');
+    } finally {
+        setLoading(false);
+    }
+}, []);
+
+
+    useEffect(() => {
+    fetchOverviewData();
+}, [fetchOverviewData]);
+
 
     const generateChartData = (referrals) => {
         const last7Days = [...Array(7)].map((_, i) => {
@@ -85,13 +89,13 @@ const ReferralOverview = () => {
         }).format(amount);
     };
 
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('en-IN', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric'
-        });
-    };
+    // const formatDate = (dateString) => {
+    //     return new Date(dateString).toLocaleDateString('en-IN', {
+    //         day: 'numeric',
+    //         month: 'short',
+    //         year: 'numeric'
+    //     });
+    // };
 
     if (loading) {
         return (
@@ -186,7 +190,7 @@ const ReferralOverview = () => {
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Last 7 Days</h3>
                     <div className="space-y-3">
-                        {chartData.map((day, index) => (
+                        {chartData.map((day) => (
                             <div key={day.date} className="flex items-center justify-between">
                                 <span className="text-sm text-gray-600 w-20">
                                     {new Date(day.date).toLocaleDateString('en-IN', { weekday: 'short' })}

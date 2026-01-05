@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "../../../config/AxiosInstance";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -10,15 +10,22 @@ function EditReview() {
   const [loading, setLoading] = useState(false);
   const [hoverRating, setHoverRating] = useState(0);
 
-  const loadReview = async () => {
-    try {
-      const res = await axios.get(`/reviews/${id}`);
-      setRating(res.data.review.rating);
-      setReview(res.data.review.review);
-    } catch (error) {
-      console.error("Error loading review:", error);
-    }
-  };
+//  const loadReviews = useCallback(async () => {
+//   try {
+//     const res = await axios.get(`/reviews/business/${id}`);
+//     // setData(res.data.reviews);
+//   } catch (error) {
+//     console.error("Error loading reviews:", error);
+//   } finally {
+//     setLoading(false);
+//   }
+// }, [id]);
+
+
+// useEffect(() => {
+//   loadReviews();
+// }, [loadReviews]);
+
 
   const handleUpdate = async () => {
     if (!rating || !review.trim()) {
@@ -56,9 +63,6 @@ function EditReview() {
     ));
   };
 
-  useEffect(() => {
-    loadReview();
-  }, []);
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-lg border border-gray-100">

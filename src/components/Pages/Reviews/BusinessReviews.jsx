@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../../../config/AxiosInstance";
 
@@ -7,20 +7,22 @@ function BusinessReviews() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const loadReviews = async () => {
-    try {
-      const res = await axios.get(`/reviews/business/${id}`);
-      setData(res.data.reviews);
-    } catch (error) {
-      console.error("Error loading reviews:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const loadReviews = useCallback(async () => {
+  try {
+    const res = await axios.get(`/reviews/business/${id}`);
+    setData(res.data.reviews);
+  } catch (error) {
+    console.error("Error loading reviews:", error);
+  } finally {
+    setLoading(false);
+  }
+}, [id]);
 
-  useEffect(() => {
-    loadReviews();
-  }, []);
+
+useEffect(() => {
+  loadReviews();
+}, [loadReviews]);
+
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, index) => (

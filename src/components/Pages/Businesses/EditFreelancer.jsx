@@ -1,5 +1,5 @@
 // components/Pages/Businesses/EditFreelancer.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../config/AxiosInstance';
 import {
@@ -56,59 +56,67 @@ const EditFreelancer = () => {
   const [newFacility, setNewFacility] = useState('');
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    fetchFreelancerData();
-  }, [id]);
 
-  const fetchFreelancerData = async () => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.get(`/freelancer/${id}`);
-      if (response.data.success) {
-        const freelancerData = response.data.freelancer;
-        setFreelancer({
-          fullName: freelancerData.fullName || '',
-          phone: freelancerData.phone || '',
-          email: freelancerData.email || '',
-          experience: freelancerData.experience || 0,
-          contact: {
-            phone: freelancerData.contact?.phone || freelancerData.phone || '',
-            email: freelancerData.contact?.email || freelancerData.email || '',
-            website: freelancerData.contact?.website || ''
-          },
-          address: {
-            street: freelancerData.address?.street || '',
-            area: freelancerData.address?.area || '',
-            city: freelancerData.address?.city || '',
-            state: freelancerData.address?.state || '',
-            pinCode: freelancerData.address?.pinCode || '',
-            country: freelancerData.address?.country || 'India'
-          },
-          facilities: Array.isArray(freelancerData.facilities) 
-            ? freelancerData.facilities.map(f => f.replace(/[\[\]"]/g, ''))
-            : [],
-          transportCharge: freelancerData.transportCharge || 0,
-          averageReachTime: freelancerData.averageReachTime || 30,
-          commission: {
-            isCommissionApplicable: freelancerData.commission?.isCommissionApplicable || true,
-            percentage: freelancerData.commission?.percentage || 0
-          },
-          bookingTypes: {
-            preBooking: freelancerData.bookingTypes?.preBooking !== false,
-            urgentBooking: freelancerData.bookingTypes?.urgentBooking !== false
-          },
-          approvalStatus: freelancerData.approvalStatus || 'approved',
-          isActive: freelancerData.isActive !== undefined ? freelancerData.isActive : true
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching freelancer data:', error);
-      toast.error('Failed to fetch freelancer data');
-      navigate('/businesses/freelancers');
-    } finally {
-      setLoading(false);
+
+const fetchFreelancerData = useCallback(async () => {
+  try {
+    setLoading(true);
+    const response = await axiosInstance.get(`/freelancer/${id}`);
+    if (response.data.success) {
+      const freelancerData = response.data.freelancer;
+      setFreelancer({
+        fullName: freelancerData.fullName || '',
+        phone: freelancerData.phone || '',
+        email: freelancerData.email || '',
+        experience: freelancerData.experience || 0,
+        contact: {
+          phone: freelancerData.contact?.phone || freelancerData.phone || '',
+          email: freelancerData.contact?.email || freelancerData.email || '',
+          website: freelancerData.contact?.website || ''
+        },
+        address: {
+          street: freelancerData.address?.street || '',
+          area: freelancerData.address?.area || '',
+          city: freelancerData.address?.city || '',
+          state: freelancerData.address?.state || '',
+          pinCode: freelancerData.address?.pinCode || '',
+          country: freelancerData.address?.country || 'India'
+        },
+        facilities: Array.isArray(freelancerData.facilities)
+          ? freelancerData.facilities.map(f => f.replace(/[\]"]/g, ''))
+          : [],
+        transportCharge: freelancerData.transportCharge || 0,
+        averageReachTime: freelancerData.averageReachTime || 30,
+        commission: {
+          isCommissionApplicable:
+            freelancerData.commission?.isCommissionApplicable || true,
+          percentage: freelancerData.commission?.percentage || 0
+        },
+        bookingTypes: {
+          preBooking: freelancerData.bookingTypes?.preBooking !== false,
+          urgentBooking: freelancerData.bookingTypes?.urgentBooking !== false
+        },
+        approvalStatus: freelancerData.approvalStatus || 'approved',
+        isActive:
+          freelancerData.isActive !== undefined
+            ? freelancerData.isActive
+            : true
+      });
     }
-  };
+  } catch (error) {
+    console.error('Error fetching freelancer data:', error);
+    toast.error('Failed to fetch freelancer data');
+    navigate('/businesses/freelancers');
+  } finally {
+    setLoading(false);
+  }
+}, [id, navigate]);
+
+
+useEffect(() => {
+  fetchFreelancerData();
+}, [fetchFreelancerData]);
+
 
   const validateForm = () => {
     const newErrors = {};

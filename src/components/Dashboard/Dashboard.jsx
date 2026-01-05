@@ -1,284 +1,4 @@
 
-// import {
-//   Layers,
-//   RefreshCw,
-//   ShoppingCart,
-//   Users,
-//   Store,
-//   Calendar,
-//   DollarSign,
-// } from "lucide-react";
-
-// import React, { useEffect, useState } from "react";
-// import axiosInstance from "../../config/AxiosInstance";
-// import {
-//   LineChart,
-//   Line,
-//   XAxis,
-//   YAxis,
-//   Tooltip,
-//   ResponsiveContainer,
-//   PieChart,
-//   Pie,
-//   Cell,
-// } from "recharts";
-// import { ToastContainer, toast } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
-
-// const salesData = [
-//   { date: "2025-07-14", sales: 800 },
-//   { date: "2025-07-15", sales: 1400 },
-//   { date: "2025-07-16", sales: 1200 },
-// ];
-
-// const pieData = [
-//   { name: "At Home", value: 16 },
-//   { name: "At Salon", value: 18 },
-// ];
-
-// const COLORS = ["#0088FE", "#00C49F"];
-
-// const savedUser = JSON.parse(localStorage.getItem("user") || "null");
-
-// const formatNumber = (value) =>
-//   Number(value || 0).toLocaleString("en-IN");
-
-// const formatCurrency = (value) =>
-//   `₹${Number(value || 0).toLocaleString("en-IN")}`;
-
-// export default function Dashboard() {
-//   const [dashboard, setDashboard] = useState({
-//     counts: {
-//       totalCustomers: 0,
-//       totalSalons: 0,
-//       totalFreelancers: 0,
-//       totalCoupons: 0,
-//       totalLeads: 0,
-//       todayLeads: 0,
-//       totalTickets: 0,
-//     },
-//     referrals: {
-//       today: 0,
-//       overall: 0,
-//     },
-//     earnings: {
-//       overall: 0,
-//       overallCommission: 0,
-//       today: 0,
-//     },
-//     bookings: {
-//       overall: {
-//         total: 0,
-//         atHome: 0,
-//         atSalon: 0,
-//       },
-//       today: {
-//         atHome: 0,
-//         atSalon: 0,
-//       },
-//     },
-//   });
-
-//   useEffect(() => {
-//     if (savedUser) {
-//       toast.success(`Welcome ${savedUser.name || ""}!`);
-//     }
-//   }, []);
-
-//   useEffect(() => {
-//     const fetchDashboardSummary = async () => {
-//       try {
-//         const response = await axiosInstance.get("/dash/super-admin");
-//         if (response.data?.success) {
-//           setDashboard(response.data.data);
-//         }
-//       } catch (error) {
-//         console.error("Error fetching dashboard summary:", error);
-//         toast.error("Failed to load dashboard summary");
-//       }
-//     };
-
-//     fetchDashboardSummary();
-//   }, []);
-
-//   return (
-//     <>
-//       <ToastContainer />
-//       <div className="min-h-screen bg-gray-50 overflow-x-hidden">
-//         <div className="max-w-full">
-//           <h1 className="text-2xl font-semibold text-gray-900 mb-6">
-//             Dashboard Overview
-//           </h1>
-
-//           {/* 🔹 1. Customers, Salons, Freelancers, Coupons */}
-//           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-6 w-full">
-//             <div className="bg-white p-5 rounded-xl shadow-md flex items-start gap-5">
-//               <div className="h-14 w-14 flex items-center justify-center rounded-lg bg-purple-50 text-purple-500">
-//                 <Users className="h-6 w-6" />
-//               </div>
-//               <div>
-//                 <div className="text-sm text-gray-500">Total Customers</div>
-//                 <div className="text-2xl font-bold">
-//                   {formatNumber(dashboard.counts.totalCustomers)}
-//                 </div>
-//               </div>
-//             </div>
-
-//             <div className="bg-white p-5 rounded-xl shadow-md flex items-start gap-5">
-//               <div className="h-14 w-14 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-500">
-//                 <Store className="h-6 w-6" />
-//               </div>
-//               <div>
-//                 <div className="text-sm text-gray-500">Total Salons</div>
-//                 <div className="text-2xl font-bold">
-//                   {formatNumber(dashboard.counts.totalSalons)}
-//                 </div>
-//               </div>
-//             </div>
-
-//             <div className="bg-white p-5 rounded-xl shadow-md flex items-start gap-5">
-//               <div className="h-14 w-14 flex items-center justify-center rounded-lg bg-blue-50 text-blue-500">
-//                 <Calendar className="h-6 w-6" />
-//               </div>
-//               <div>
-//                 <div className="text-sm text-gray-500">Freelancers</div>
-//                 <div className="text-2xl font-bold">
-//                   {formatNumber(dashboard.counts.totalFreelancers)}
-//                 </div>
-//               </div>
-//             </div>
-
-//             <div className="bg-white p-5 rounded-xl shadow-md flex items-start gap-5">
-//               <div className="h-14 w-14 flex items-center justify-center rounded-lg bg-yellow-50 text-yellow-500">
-//                 <ShoppingCart className="h-6 w-6" />
-//               </div>
-//               <div>
-//                 <div className="text-sm text-gray-500">Coupons</div>
-//                 <div className="text-2xl font-bold">
-//                   {formatNumber(dashboard.counts.totalCoupons)}
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* 🔹 2. Leads, Tickets, Earnings, Bookings */}
-//           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-6 w-full">
-//             <div className="bg-white p-5 rounded-xl shadow-md flex items-start gap-5">
-//               <div className="h-14 w-14 flex items-center justify-center rounded-lg bg-red-50 text-red-500">
-//                 <RefreshCw className="h-6 w-6" />
-//               </div>
-//               <div>
-//                 <div className="text-sm text-gray-500">Leads</div>
-//                 <div className="text-2xl font-bold">
-//                   {formatNumber(dashboard.counts.totalLeads)}
-//                 </div>
-//                 <div className="text-xs text-gray-400">
-//                   Today: {formatNumber(dashboard.counts.todayLeads)}
-//                 </div>
-//               </div>
-//             </div>
-
-//             <div className="bg-white p-5 rounded-xl shadow-md flex items-start gap-5">
-//               <div className="h-14 w-14 flex items-center justify-center rounded-lg bg-cyan-50 text-cyan-500">
-//                 <Layers className="h-6 w-6" />
-//               </div>
-//               <div>
-//                 <div className="text-sm text-gray-500">Tickets</div>
-//                 <div className="text-2xl font-bold">
-//                   {formatNumber(dashboard.counts.totalTickets)}
-//                 </div>
-//               </div>
-//             </div>
-
-//             <div className="bg-white p-5 rounded-xl shadow-md flex items-start gap-5">
-//               <div className="h-14 w-14 flex items-center justify-center rounded-lg bg-green-50 text-green-500">
-//                 <DollarSign className="h-6 w-6" />
-//               </div>
-//               <div>
-//                 <div className="text-sm text-gray-500">Earnings</div>
-//                 <div className="text-2xl font-bold">
-//                   {formatCurrency(dashboard.earnings.overall)}
-//                 </div>
-//                 <div className="text-xs text-gray-400">
-//                   Today: {formatCurrency(dashboard.earnings.today)}
-//                 </div>
-//               </div>
-//             </div>
-
-//             <div className="bg-white p-5 rounded-xl shadow-md flex items-start gap-5">
-//               <div className="h-14 w-14 flex items-center justify-center rounded-lg bg-orange-50 text-orange-500">
-//                 <Store className="h-6 w-6" />
-//               </div>
-//               <div>
-//                 <div className="text-sm text-gray-500">Bookings</div>
-//                 <div className="text-2xl font-bold">
-//                   {formatNumber(dashboard.bookings.overall.total)}
-//                 </div>
-//                 <div className="text-xs text-gray-400">
-//                   Home: {dashboard.bookings.overall.atHome} | Salon:{" "}
-//                   {dashboard.bookings.overall.atSalon}
-//                 </div>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Charts (same) */}
-//           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 w-full">
-//             <div className="bg-white p-4 rounded-lg shadow">
-//               <h2 className="text-lg font-medium mb-4">Weekly Sales</h2>
-//               <div className="w-full h-[250px]">
-//                 <ResponsiveContainer width="100%" height="100%">
-//                   <LineChart data={salesData}>
-//                     <XAxis dataKey="date" />
-//                     <YAxis />
-//                     <Tooltip />
-//                     <Line
-//                       type="monotone"
-//                       dataKey="sales"
-//                       stroke="#10B981"
-//                       strokeWidth={2}
-//                     />
-//                   </LineChart>
-//                 </ResponsiveContainer>
-//               </div>
-//             </div>
-
-//             <div className="bg-white p-4 rounded-lg shadow">
-//               <h2 className="text-lg font-medium mb-4">Bookings Split</h2>
-//               <div className="h-[250px] w-full">
-//                 <ResponsiveContainer width="100%" height="100%">
-//                   <PieChart>
-//                     <Pie
-//                       data={pieData}
-//                       dataKey="value"
-//                       nameKey="name"
-//                       cx="50%"
-//                       cy="50%"
-//                       outerRadius={80}
-//                       label
-//                     >
-//                       {pieData.map((_, index) => (
-//                         <Cell
-//                           key={index}
-//                           fill={COLORS[index % COLORS.length]}
-//                         />
-//                       ))}
-//                     </Pie>
-//                     <Tooltip />
-//                   </PieChart>
-//                 </ResponsiveContainer>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-
-
-
 import {
   Layers,
   RefreshCw,
@@ -363,7 +83,8 @@ export default function Dashboard() {
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState('');
-  const [activeTab, setActiveTab] = useState('overview');
+  // const [activeTab, setActiveTab] = useState('overview');
+
 useEffect(() => {
   const adminData = JSON.parse(localStorage.getItem("admin") || "null");
   const roleFromStorage = localStorage.getItem("role");
@@ -403,6 +124,9 @@ useEffect(() => {
         case 'freelancer':
           endpoint = '/dash/freelancer';
           break;
+            case 'staff':
+        endpoint = '/dash/staff';  // यह add करें
+        break;
         default:
           endpoint = '/dash/super-admin'; // Default
       }
@@ -419,12 +143,12 @@ useEffect(() => {
     }
   };
 
-  const refreshDashboard = () => {
-    const savedUser = JSON.parse(localStorage.getItem("user") || "null");
-    if (savedUser) {
-      fetchDashboardData(savedUser.role);
-    }
-  };
+  // const refreshDashboard = () => {
+  //   const savedUser = JSON.parse(localStorage.getItem("user") || "null");
+  //   if (savedUser) {
+  //     fetchDashboardData(savedUser.role);
+  //   }
+  // };
 
   if (loading) {
     return (
@@ -446,13 +170,13 @@ useEffect(() => {
           <h1 className="text-3xl font-bold text-gray-900">Super Admin Dashboard</h1>
           <p className="text-gray-600 mt-2">Complete platform overview and analytics</p>
         </div>
-        <button
+        {/* <button
           onClick={refreshDashboard}
           className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
         >
           <RefreshCw className="h-4 w-4 mr-2" />
           Refresh Data
-        </button>
+        </button> */}
       </div>
 
       {/* Stats Grid - Row 1 */}
@@ -791,13 +515,13 @@ useEffect(() => {
           <h1 className="text-3xl font-bold text-gray-900">Salon Dashboard</h1>
           <p className="text-gray-600 mt-2">Manage your salon performance and analytics</p>
         </div>
-        <button
+        {/* <button
           onClick={refreshDashboard}
           className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
         >
           <RefreshCw className="h-4 w-4 mr-2" />
           Refresh Data
-        </button>
+        </button> */}
       </div>
 
       {/* Main Stats Grid */}
@@ -1049,13 +773,13 @@ useEffect(() => {
           <h1 className="text-3xl font-bold text-gray-900">Freelancer Dashboard</h1>
           <p className="text-gray-600 mt-2">Track your services and earnings</p>
         </div>
-        <button
+        {/* <button
           onClick={refreshDashboard}
           className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <RefreshCw className="h-4 w-4 mr-2" />
           Refresh Data
-        </button>
+        </button> */}
       </div>
 
       {/* Main Stats Grid */}
@@ -1292,6 +1016,427 @@ useEffect(() => {
     </>
   );
 
+  // Render Staff Dashboard
+// Render Staff Dashboard
+const renderStaffDashboard = () => {
+  const appointments = dashboard?.appointments || {};
+  const attendance = dashboard?.attendance || {};
+  const upcomingAppointments = dashboard?.upcomingAppointments || [];
+
+  // Debug logging
+  console.log("Staff Dashboard Data:", dashboard);
+  console.log("Appointments:", appointments);
+  console.log("Upcoming Appointments:", upcomingAppointments);
+
+  return (
+    <>
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Staff Dashboard</h1>
+          <p className="text-gray-600 mt-2">Track your appointments and attendance</p>
+        </div>
+      </div>
+
+      {/* Main Stats Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {/* Total Appointments */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+          <div className="flex items-center justify-between mb-4">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500">
+              <Calendar className="h-6 w-6 text-white" />
+            </div>
+            <span className="text-sm font-medium text-indigo-600">Lifetime</span>
+          </div>
+          <h3 className="text-3xl font-bold text-gray-900">
+            {formatNumber(appointments.total || 0)}
+          </h3>
+          <p className="text-gray-600 mt-1">Total Appointments</p>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            <div className="text-center">
+              <Clock className="h-4 w-4 text-blue-500 mx-auto mb-1" />
+              <span className="text-sm text-gray-600">
+                {formatNumber(appointments.today || 0)} Today
+              </span>
+            </div>
+            <div className="text-center">
+              <UserCheck className="h-4 w-4 text-green-500 mx-auto mb-1" />
+              <span className="text-sm text-gray-600">
+                {formatNumber(appointments.completed || 0)} Completed
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Attendance Status */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+          <div className="flex items-center justify-between mb-4">
+            <div className={`p-3 rounded-xl ${
+              attendance.status === 'present' 
+                ? 'bg-gradient-to-br from-green-500 to-emerald-500'
+                : attendance.status === 'absent'
+                ? 'bg-gradient-to-br from-red-500 to-pink-500'
+                : 'bg-gradient-to-br from-yellow-500 to-orange-500'
+            }`}>
+              <UserCheck className="h-6 w-6 text-white" />
+            </div>
+            <span className={`text-sm font-medium ${
+              attendance.status === 'present' 
+                ? 'text-green-600'
+                : attendance.status === 'absent'
+                ? 'text-red-600'
+                : 'text-yellow-600'
+            }`}>
+              {attendance.status?.toUpperCase() || 'NOT MARKED'}
+            </span>
+          </div>
+          <h3 className="text-3xl font-bold text-gray-900 capitalize">
+            {attendance.status || 'Not Marked'}
+          </h3>
+          <p className="text-gray-600 mt-1">Today's Attendance</p>
+          <div className="mt-4 space-y-2">
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-600">Check-in:</span>
+              <span className="font-medium">
+                {attendance.markIn 
+                  ? new Date(attendance.markIn).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                  : '--:--'}
+              </span>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-gray-600">Check-out:</span>
+              <span className="font-medium">
+                {attendance.markOut 
+                  ? new Date(attendance.markOut).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                  : '--:--'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Today's Appointments */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+          <div className="flex items-center justify-between mb-4">
+            <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500">
+              <Clock className="h-6 w-6 text-white" />
+            </div>
+            <span className="text-sm font-medium text-blue-600">Today</span>
+          </div>
+          <h3 className="text-3xl font-bold text-gray-900">
+            {formatNumber(appointments.today || 0)}
+          </h3>
+          <p className="text-gray-600 mt-1">Today's Appointments</p>
+          <div className="mt-4 flex items-center">
+            <Calendar className="h-4 w-4 text-orange-500 mr-1" />
+            <span className="text-sm text-orange-600">
+              Upcoming: {formatNumber(upcomingAppointments.length || 0)}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Upcoming Appointments Section */}
+      <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center">
+            <Calendar className="h-6 w-6 text-indigo-600 mr-3" />
+            <h3 className="text-lg font-semibold text-gray-900">Upcoming Appointments</h3>
+          </div>
+          <span className="px-3 py-1 bg-indigo-100 text-indigo-600 text-sm font-medium rounded-full">
+            {upcomingAppointments.length} appointments
+          </span>
+        </div>
+
+        {upcomingAppointments && upcomingAppointments.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead>
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Customer
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Service
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Time
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Location
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200">
+                {upcomingAppointments.slice(0, 5).map((appointment, index) => {
+                  // Safely extract data with fallbacks
+                  const customerName = appointment.customerName || appointment.customer?.name || 'Customer';
+                  const phone = appointment.phone || appointment.customer?.phone || 'N/A';
+                  const service = appointment.service || appointment.serviceName || 'Service';
+                  const appointmentTime = appointment.time || appointment.date || appointment.appointmentTime;
+                  const status = appointment.status || 'scheduled';
+                  const type = appointment.type || appointment.locationType || 'atSalon';
+                  
+                  return (
+                    <tr key={index} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 h-8 w-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <Users className="h-4 w-4 text-indigo-600" />
+                          </div>
+                          <div className="ml-3">
+                            <p className="text-sm font-medium text-gray-900">
+                              {customerName}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {phone}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <span className="text-sm text-gray-900">
+                          {service}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        {appointmentTime ? (
+                          <>
+                            <div className="text-sm text-gray-900">
+                              {new Date(appointmentTime).toLocaleDateString()}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {new Date(appointmentTime).toLocaleTimeString([], {
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </div>
+                          </>
+                        ) : (
+                          <span className="text-sm text-gray-500">Not scheduled</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                          status === 'completed'
+                            ? 'bg-green-100 text-green-800'
+                            : status === 'pending'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : status === 'cancelled'
+                            ? 'bg-red-100 text-red-800'
+                            : 'bg-blue-100 text-blue-800'
+                        }`}>
+                          {status.toUpperCase()}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <div className="flex items-center">
+                          {type === 'atHome' ? (
+                            <>
+                              <Home className="h-4 w-4 text-blue-500 mr-1" />
+                              <span className="text-sm text-blue-600">At Home</span>
+                            </>
+                          ) : (
+                            <>
+                              <Building className="h-4 w-4 text-green-500 mr-1" />
+                              <span className="text-sm text-green-600">At Salon</span>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+            <h4 className="text-lg font-medium text-gray-900 mb-1">No upcoming appointments</h4>
+            <p className="text-gray-600">You have no appointments scheduled for today.</p>
+          </div>
+        )}
+
+        {upcomingAppointments && upcomingAppointments.length > 5 && (
+          <div className="mt-4 text-center">
+            <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+              View all {upcomingAppointments.length} appointments →
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Quick Stats - FIXED: Using only available data */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {/* Today's Appointments */}
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="flex items-center mb-4">
+            <div className="p-2 rounded-lg bg-blue-100 mr-3">
+              <Calendar className="h-5 w-5 text-blue-600" />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium text-gray-900">Today's</h4>
+              <p className="text-2xl font-bold text-gray-900">
+                {formatNumber(appointments.today || 0)}
+              </p>
+            </div>
+          </div>
+          <div className="text-sm text-gray-600">
+            Appointments today
+          </div>
+        </div>
+
+        {/* Completed Appointments */}
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="flex items-center mb-4">
+            <div className="p-2 rounded-lg bg-green-100 mr-3">
+              <UserCheck className="h-5 w-5 text-green-600" />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium text-gray-900">Completed</h4>
+              <p className="text-2xl font-bold text-gray-900">
+                {formatNumber(appointments.completed || 0)}
+              </p>
+            </div>
+          </div>
+          <div className="text-sm text-gray-600">
+            Total completed
+          </div>
+        </div>
+
+        {/* Total Appointments */}
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="flex items-center mb-4">
+            <div className="p-2 rounded-lg bg-purple-100 mr-3">
+              <Layers className="h-5 w-5 text-purple-600" />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium text-gray-900">Total</h4>
+              <p className="text-2xl font-bold text-gray-900">
+                {formatNumber(appointments.total || 0)}
+              </p>
+            </div>
+          </div>
+          <div className="text-sm text-gray-600">
+            All-time appointments
+          </div>
+        </div>
+
+        {/* Next Appointment */}
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="flex items-center mb-4">
+            <div className="p-2 rounded-lg bg-indigo-100 mr-3">
+              <Clock className="h-5 w-5 text-indigo-600" />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium text-gray-900">Next Appointment</h4>
+              <p className="text-sm font-bold text-gray-900 truncate">
+                {upcomingAppointments && upcomingAppointments.length > 0
+                  ? new Date(upcomingAppointments[0].time || upcomingAppointments[0].date).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })
+                  : 'No appointments'}
+              </p>
+            </div>
+          </div>
+          <div className="text-sm text-gray-600 truncate">
+            {upcomingAppointments && upcomingAppointments.length > 0
+              ? (upcomingAppointments[0].customerName || upcomingAppointments[0].customer?.name || 'Customer')
+              : 'Schedule free'}
+          </div>
+        </div>
+      </div>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Appointments Trend */}
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Weekly Appointments</h3>
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full bg-indigo-500 mr-2"></div>
+                <span className="text-sm text-gray-600">Daily Trend</span>
+              </div>
+            </div>
+          </div>
+          <div className="h-72">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={salesData.map(item => ({ ...item, appointments: item.sales / 100 }))}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis 
+                  dataKey="date" 
+                  stroke="#666" 
+                  fontSize={12}
+                />
+                <YAxis 
+                  stroke="#666" 
+                  fontSize={12}
+                  tickFormatter={(value) => Math.round(value)}
+                />
+                <Tooltip 
+                  formatter={(value) => [Math.round(value), 'Appointments']}
+                  labelStyle={{ color: '#666' }}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="appointments" 
+                  stroke="#6366f1" 
+                  strokeWidth={3}
+                  dot={{ stroke: '#6366f1', strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Appointment Types Distribution */}
+        <div className="bg-white rounded-2xl shadow-lg p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Appointment Types</h3>
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
+                <span className="text-sm text-gray-600">At Home</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+                <span className="text-sm text-gray-600">At Salon</span>
+              </div>
+            </div>
+          </div>
+          <div className="h-72">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip formatter={(value) => [value, 'Appointments']} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
   // Main render based on user role
   return (
     <>
@@ -1301,6 +1446,8 @@ useEffect(() => {
           {userRole === 'super_admin' && renderSuperAdminDashboard()}
           {userRole === 'admin' && renderAdminDashboard()}
           {userRole === 'freelancer' && renderFreelancerDashboard()}
+          {userRole === 'staff' && renderStaffDashboard()}  {/* यह add करें */}
+
           {!userRole && (
             <div className="text-center py-12">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Unable to determine user role</h2>

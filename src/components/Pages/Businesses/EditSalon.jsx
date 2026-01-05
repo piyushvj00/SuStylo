@@ -769,7 +769,7 @@
 
 
 // components/Pages/Businesses/EditSalon.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../config/AxiosInstance';
 import {
@@ -823,56 +823,60 @@ const EditSalon = () => {
   const [newFacility, setNewFacility] = useState('');
   const [errors, setErrors] = useState({});
   const [photoFiles, setPhotoFiles] = useState([]);
-  const [docFiles, setDocFiles] = useState([]);
+  // const [docFiles, setDocFiles] = useState([]);
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    fetchSalonData();
-  }, [id]);
 
-  const fetchSalonData = async () => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.get(`/salons/${id}`);
-      if (response.data.success) {
-        const salonData = response.data.salon;
-        setSalon({
-          salonName: salonData.salonName || '',
-          description: salonData.description || '',
-          contact: {
-            phone: salonData.contact?.phone || '',
-            email: salonData.contact?.email || '',
-            website: salonData.contact?.website || ''
-          },
-          address: {
-            street: salonData.address?.street || '',
-            area: salonData.address?.area || '',
-            city: salonData.address?.city || '',
-            state: salonData.address?.state || '',
-            pinCode: salonData.address?.pinCode || '',
-            country: salonData.address?.country || 'India'
-          },
-          facilities: Array.isArray(salonData.facilities) ? salonData.facilities : [],
-          chairCount: salonData.chairCount || 0,
-          commission: {
-            isCommissionApplicable: salonData.commission?.isCommissionApplicable || true,
-            percentage: salonData.commission?.percentage || 0,
-            flat: salonData.commission?.flat || 0
-          },
-          approvalStatus: salonData.approvalStatus || 'approved',
-          isActive: salonData.isActive !== undefined ? salonData.isActive : true,
-          photos: Array.isArray(salonData.photos) ? salonData.photos : [],
-          agreementDocs: Array.isArray(salonData.agreementDocs) ? salonData.agreementDocs : []
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching salon data:', error);
-      toast.error('Failed to fetch salon data');
-      navigate('/businesses/salons');
-    } finally {
-      setLoading(false);
+
+ const fetchSalonData = useCallback(async () => {
+  try {
+    setLoading(true);
+    const response = await axiosInstance.get(`/salons/${id}`);
+    if (response.data.success) {
+      const salonData = response.data.salon;
+      setSalon({
+        salonName: salonData.salonName || '',
+        description: salonData.description || '',
+        contact: {
+          phone: salonData.contact?.phone || '',
+          email: salonData.contact?.email || '',
+          website: salonData.contact?.website || ''
+        },
+        address: {
+          street: salonData.address?.street || '',
+          area: salonData.address?.area || '',
+          city: salonData.address?.city || '',
+          state: salonData.address?.state || '',
+          pinCode: salonData.address?.pinCode || '',
+          country: salonData.address?.country || 'India'
+        },
+        facilities: Array.isArray(salonData.facilities) ? salonData.facilities : [],
+        chairCount: salonData.chairCount || 0,
+        commission: {
+          isCommissionApplicable: salonData.commission?.isCommissionApplicable || true,
+          percentage: salonData.commission?.percentage || 0,
+          flat: salonData.commission?.flat || 0
+        },
+        approvalStatus: salonData.approvalStatus || 'approved',
+        isActive: salonData.isActive !== undefined ? salonData.isActive : true,
+        photos: Array.isArray(salonData.photos) ? salonData.photos : [],
+        agreementDocs: Array.isArray(salonData.agreementDocs) ? salonData.agreementDocs : []
+      });
     }
-  };
+  } catch (error) {
+    console.error('Error fetching salon data:', error);
+    toast.error('Failed to fetch salon data');
+    navigate('/businesses/salons');
+  } finally {
+    setLoading(false);
+  }
+}, [id, navigate]);
+
+
+useEffect(() => {
+  fetchSalonData();
+}, [fetchSalonData]);
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -935,23 +939,23 @@ const EditSalon = () => {
       setSaving(true);
       
       // First, handle photo uploads if any
-      let updatedPhotos = salon.photos;
-      if (photoFiles.length > 0) {
-        const photoFormData = new FormData();
-        photoFiles.forEach(file => {
-          photoFormData.append('photos', file);
-        });
+      // let updatedPhotos = salon.photos;
+      // if (photoFiles.length > 0) {
+      //   const photoFormData = new FormData();
+      //   photoFiles.forEach(file => {
+      //     photoFormData.append('photos', file);
+      //   });
 
-        const photoResponse = await axiosInstance.put(`/salons/${id}`, photoFormData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+      //   const photoResponse = await axiosInstance.put(`/salons/${id}`, photoFormData, {
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data',
+      //     },
+      //   });
 
-        if (photoResponse.data.success) {
-          updatedPhotos = photoResponse.data.salon.photos;
-        }
-      }
+      //   if (photoResponse.data.success) {
+      //     updatedPhotos = photoResponse.data.salon.photos;
+      //   }
+      // }
 
       // Now update other salon data
       const formData = new FormData();
@@ -1073,10 +1077,10 @@ const EditSalon = () => {
     }
   };
 
-  const handleDocUpload = (e) => {
-    const files = Array.from(e.target.files);
-    setDocFiles(prev => [...prev, ...files]);
-  };
+  // const handleDocUpload = (e) => {
+  //   const files = Array.from(e.target.files);
+  //   setDocFiles(prev => [...prev, ...files]);
+  // };
 
   if (loading) {
     return (

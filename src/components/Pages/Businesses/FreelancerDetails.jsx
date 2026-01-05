@@ -654,7 +654,7 @@
 
 
 // components/Pages/Businesses/FreelancerDetails.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../../../config/AxiosInstance';
 import {
@@ -732,25 +732,30 @@ const FreelancerDetails = () => {
     atHome: false
   });
 
-  useEffect(() => {
-    fetchFreelancerDetails();
-  }, [id]);
 
-  const fetchFreelancerDetails = async () => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.get(`/freelancer/${id}`);
-      if (response.data.success) {
-        setFreelancer(response.data.freelancer);
-      }
-    } catch (error) {
-      console.error('Error fetching freelancer details:', error);
-      toast.error('Failed to fetch freelancer details');
-      navigate('/businesses/freelancers');
-    } finally {
-      setLoading(false);
+
+const fetchFreelancerDetails = useCallback(async () => {
+  try {
+    setLoading(true);
+    const response = await axiosInstance.get(`/freelancer/${id}`);
+    if (response.data.success) {
+      setFreelancer(response.data.freelancer);
     }
-  };
+  } catch (error) {
+    console.error('Error fetching freelancer details:', error);
+    toast.error('Failed to fetch freelancer details');
+    navigate('/businesses/freelancers');
+  } finally {
+    setLoading(false);
+  }
+}, [id, navigate]);
+
+
+useEffect(() => {
+  fetchFreelancerDetails();
+}, [fetchFreelancerDetails]);
+
+
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-IN', {
@@ -1276,7 +1281,7 @@ const FreelancerDetails = () => {
                             key={index}
                             className="inline-flex items-center px-3 py-1.5 rounded-full text-sm bg-teal-50 text-teal-700"
                           >
-                            {facility.replace(/[\[\]"]/g, '')}
+                            {facility.replace(/[\]"]/g, '')}
                           </span>
                         ))
                       ) : (

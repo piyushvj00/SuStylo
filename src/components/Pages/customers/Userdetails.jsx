@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../../config/AxiosInstance'; // Adjust the path
 import { Loader, X, MapPin, Wallet, User, Mail, Phone, Calendar, Shield } from 'lucide-react';
 
@@ -6,25 +6,27 @@ const UserDetailsModal = ({ userId, onClose }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (userId) {
-      fetchUserDetails();
+const fetchUserDetails = useCallback(async () => {
+  try {
+    setLoading(true);
+    const response = await axiosInstance.get(`/customers/${userId}`);
+    if (response.data.success) {
+      setUser(response.data.customer);
     }
-  }, [userId]);
+  } catch (error) {
+    console.error("Error fetching user details:", error);
+  } finally {
+    setLoading(false);
+  }
+}, [userId]);
 
-  const fetchUserDetails = async () => {
-    try {
-      setLoading(true);
-      const response = await axiosInstance.get(`/customers/${userId}`);
-      if (response.data.success) {
-        setUser(response.data.customer);
-      }
-    } catch (error) {
-      console.error('Error fetching user details:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+useEffect(() => {
+  if (userId) {
+    fetchUserDetails();
+  }
+}, [userId, fetchUserDetails]);
+
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-IN', {
       year: 'numeric',
@@ -35,13 +37,13 @@ const UserDetailsModal = ({ userId, onClose }) => {
     });
   };
 
-  const getRoleColor = (role) => {
-    switch (role) {
-      case 'admin': return 'bg-purple-100 text-purple-800';
-      case 'vendor': return 'bg-orange-100 text-orange-800';
-      default: return 'bg-blue-100 text-blue-800';
-    }
-  };
+  // const getRoleColor = (role) => {
+  //   switch (role) {
+  //     case 'admin': return 'bg-purple-100 text-purple-800';
+  //     case 'vendor': return 'bg-orange-100 text-orange-800';
+  //     default: return 'bg-blue-100 text-blue-800';
+  //   }
+  // };
 
   const getStatusColor = (status) => {
     return status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';

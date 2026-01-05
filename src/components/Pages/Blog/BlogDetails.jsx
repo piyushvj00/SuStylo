@@ -840,7 +840,7 @@ const BlogDetails = () => {
         if (!imagePath) return '';
         if (imagePath.startsWith('http')) return imagePath;
         
-        const baseUrl = process.env.REACT_APP_API_URL || 'https://api.sustylo.com';
+        const baseUrl = 'https://api.sustylo.com';
         
         if (imagePath.startsWith('/')) {
             return `${baseUrl}${imagePath}`;

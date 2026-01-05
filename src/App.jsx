@@ -1,5 +1,5 @@
 import { Route, Routes, Outlet } from 'react-router-dom';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
 import Login from './components/Pages/Login';
@@ -7,15 +7,15 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Sidebar from './components/Layouts/Sidebar';
 import Header from './components/Layouts/Header';
 import Users from './components/Pages/customers/Users';
-import Category from './components/Pages/category/Category';
-import Attribute from './components/Pages/Attribute/Attribute';
+// import Category from './components/Pages/category/Category';
+// import Attribute from './components/Pages/Attribute/Attribute';
 import Coupon from './components/Pages/Couponcode/Coupon';
 import SettingsPage from './components/Pages/Setting/SettingsPage';
 import ProfileForm from './components/Pages/Profile/ProfileForm';
 import ForgotPassword from './components/Pages/ForgotPassword';
 import CreateAccount from './components/Pages/CreateAccount';
-import AttributesValues from './components/Pages/Attribute/AttributesValues';
-import ViewCategory from './components/Pages/category/ViewCategory';
+// import AttributesValues from './components/Pages/Attribute/AttributesValues';
+// import ViewCategory from './components/Pages/category/ViewCategory';
 import ContactList from './components/Pages/Contact/Contacts';
 import Blog from './components/Pages/Blog/BlogsList';
 import CreateBlog from './components/Pages/Blog/CreateBlog';
@@ -49,6 +49,9 @@ import EditBanner from './components/Pages/Banners/EditBanner';
 
 
 
+import BookingsList from './components/Pages/Bookings/BookingsList';
+
+
 const Layout = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
@@ -74,7 +77,19 @@ const Layout = () => {
 };
 
 function App() {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (!user) {
+      const storedUser =
+        JSON.parse(localStorage.getItem("user")) ||
+        JSON.parse(localStorage.getItem("admin"));
+
+      if (storedUser) {
+        setUser(storedUser);
+      }
+    }
+  }, [user]);
 
   return (
     <Routes>
@@ -84,13 +99,19 @@ function App() {
       <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
       <Route path="/signup" element={<PublicRoute><CreateAccount /></PublicRoute>} />
       <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
-        <Route path="/dashboard" element={<Dashboard user={user} />} />
+        <Route
+          path="/dashboard"
+          element={
+            <Dashboard user={user} />
+          }
+        />
+
         <Route path="/users" element={<Users />} />
         {/* <Route path="/customer/:id" element={<CustomerOrderList />} /> */}
-        <Route path="/catalog/categories" element={<Category />} />
-        <Route path="/catalog/categories/:id" element={<ViewCategory />} />
-        <Route path="/catalog/attributes" element={<Attribute />} />
-        <Route path="/catalog/attributes/:id" element={<AttributesValues />} />
+        {/* <Route path="/catalog/categories" element={<Category />} /> */}
+        {/* <Route path="/catalog/categories/:id" element={<ViewCategory />} /> */}
+        {/* <Route path="/catalog/attributes" element={<Attribute />} /> */}
+        {/* <Route path="/catalog/attributes/:id" element={<AttributesValues />} /> */}
         <Route path="/setting" element={<SettingsPage />} />
         <Route path="/edit-profile" element={<ProfileForm />} />
         <Route path="/contact" element={<ContactList />} />
@@ -101,7 +122,7 @@ function App() {
         <Route path="/blog/edit/:id" element={<CreateBlog />} />
         {/* <Route path="/blog/:id/comments" element={<BlogComments />} /> */}
         <Route path="/blog/comments/:blogId" element={<BlogComments />} />
-        
+
         <Route path="/reviews" element={<ReviewsList />} />
         <Route path="/reviews/top-businesses" element={<TopBusinesses />} />
         <Route path="/reviews/business/:id" element={<BusinessReviews />} />
@@ -135,6 +156,11 @@ function App() {
         <Route path="/coupons" element={<Coupon />} />
         {/* <Route path="/referral" element={<ReferralMain />} /> */}
         <Route path="/leads" element={<Leads />} />
+
+
+        <Route path="/bookings" element={<BookingsList />} />
+
+
       </Route>
     </Routes>
   );

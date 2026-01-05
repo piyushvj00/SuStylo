@@ -1,5 +1,5 @@
 // components/Pages/Banners/EditBanner.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../config/AxiosInstance';
 import {
@@ -51,22 +51,19 @@ const EditBanner = () => {
     { value: 'sidebar', label: 'Sidebar' },
     { value: 'popup', label: 'Popup' }
   ];
-
-  useEffect(() => {
-    fetchBannerData();
-  }, [id]);
-
-  const fetchBannerData = async () => {
+  const fetchBannerData = useCallback(async () => {
     try {
       setLoading(true);
+
       const response = await axiosInstance.get(`/banners/${id}`);
       if (response.data.success) {
         const bannerData = response.data.banner;
+
         setBanner(bannerData);
         setFormData({
           page: bannerData.page || 'home',
           section: bannerData.section || 'hero',
-          image: null
+          image: null,
         });
         setPreview(bannerData.image);
       }
@@ -77,7 +74,13 @@ const EditBanner = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, navigate]);
+
+  useEffect(() => {
+    fetchBannerData();
+  }, [fetchBannerData]);
+
+ 
 
   const validateForm = () => {
     const newErrors = {};
